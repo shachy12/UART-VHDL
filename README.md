@@ -29,3 +29,7 @@ On done transmitting the signal r_TX_Done will be set to '1'.
 
 ### Receiving data
 When new data arrives on the rx line the received 8 bit will be set to the signal r_Received_Byte and the signal r_Is_Byte_Received will be set to '1'
+
+## Loopback example
+The loopback example can be found in the loopback.vhdl file.
+Every data received on the RX line will be transmitted on the TX.
