@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 -- Company: 
--- Engineer: 
+-- Engineer: https://github.com/shachy12/UART-VHDL/blob/master/UART.vhd
 -- 
 -- Create Date:    14:14:53 06/17/2017 
 -- Design Name: 
@@ -56,7 +56,11 @@ architecture Behavioral of UART is
 	
 	-- TX
 	signal r_TX_Clk_Count : integer range 0 to c_TICKS_PER_BIT - 1 := 0;
-	type t_TX_State is (IDLE, START_BIT, WRITING_BITS, WRITING_END_BIT);
+	
+	--restkhz: add state BIT_FINISHED
+	--type t_TX_State is (IDLE, START_BIT, WRITING_BITS, WRITING_END_BIT);
+	type t_TX_State is (IDLE, START_BIT, WRITING_BITS, WRITING_END_BIT, BIT_FINISHED);
+	
 	signal r_TX_State : t_TX_State := IDLE;
 	signal r_TX_Byte : std_logic_vector (7 downto 0) := (others => '0');
 	signal r_TX_Bit_Index : integer range 0 to 7 := 0;
@@ -152,7 +156,14 @@ begin
 						end if;
 					when WRITING_END_BIT =>
 						o_Serial_TX <= '1';
-						o_Is_TX_Active <= '0';
+			 		--restkhz: commented 3 lines below
+						--o_Is_TX_Active <= '0';
+						--r_TX_State <= IDLE;
+						--r_TX_Done <= '1';
+			 		--restkhz: added 5 lines below
+						r_TX_State <= BIT_FINISHED;
+					when BIT_FINISHED =>
+		      				o_Is_TX_Active <= '0';
 						r_TX_State <= IDLE;
 						r_TX_Done <= '1';
 					
